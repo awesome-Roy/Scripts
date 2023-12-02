@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Microsoft(Bing) Rewards Script
 // @namespace    roy
-// @version      0.2.0
+// @version      0.2.1
 // @description  自动获得微软(Microsoft Rewards)/必应奖励(Bing Rewards)。通过设置搜索次数，🤖自动搜索获取积分。支持获得✔电脑搜索🏆、✔移动端搜索🏅、✔Microsoft Edge 奖励✌三种奖励
 // @author       roy
 // @match        https://www.bing.com/*
@@ -13,16 +13,6 @@
 
 // 此脚本的原始作者是 https://greasyfork.org/zh-CN/scripts/466396-microsoft-bing-rewards-script/code by 3hex
 // 由于在某一时刻突然无法使用，作者似乎没有继续维护，便补充了一些代码使之更容易使用
-
-// 生成32位包含大写字母与数字的字符串当作CVID
-function generateRandomString(length) {
-    const lettersAndDigits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += lettersAndDigits.charAt(Math.floor(Math.random() * lettersAndDigits.length));
-    }
-    return result;
-}
 
 (function () {
     'use strict';
@@ -101,8 +91,20 @@ function generateRandomString(length) {
         combinedTerms.push(term1 + term2);
     }
 
-    // 拼接在搜索关键词后的URL参数
+    // 生成32位包含大写字母与数字的字符串当作CVID
+    function generateRandomString(length) {
+        const lettersAndDigits = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += lettersAndDigits.charAt(Math.floor(Math.random() * lettersAndDigits.length));
+        }
+        return result;
+    }
+
+    // 用户需要先手动在Bing搜索一下，在你的搜索结果返回的URL中，把搜索词后面 & 开始的所有部分复制过来。
+    // 原始脚本中没有附带这些参数，直接调用了搜索，不会记录 Reward 积分
     const uniString = "&qs=FT&pq=2&sk=FT2&sc=10-1&cvid="+generateRandomString(32)+"&FORM=QBRE&sp=3&ghc=1&lq=0";
+
 
     if (!isNaN(num) && num != 0) {
         span.textContent = "" + num;
@@ -114,7 +116,7 @@ function generateRandomString(length) {
         // 暂停x秒后继续执行
         setTimeout(() => {
             window.open(url, "_self"); // 在当前页面中打开目标网页
-        }, 10000);
+        }, 7000);
     }
 
     div.addEventListener('click', function () { // 添加点击事件监听器
@@ -131,7 +133,7 @@ function generateRandomString(length) {
             // 暂停x秒后继续执行
             setTimeout(() => {
                 window.open(url, "_self"); // 在当前页面中打开目标网页
-            }, 10000);
+            }, 7000);
         } else {
             console.log("[info] cancel");
         }
